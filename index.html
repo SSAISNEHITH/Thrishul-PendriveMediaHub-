@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendrive Media Hub</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="welcome-screen" class="screen active">
+        <div class="welcome-container">
+            <div class="logo">
+                <i class="fa-brands fa-usb"></i>
+            </div>
+            <h1>Pendrive Media Hub</h1>
+            <p>Securely play your media and view PDFs without copying or altering data.</p>
+            <button id="connect-btn" class="btn primary-btn">
+                <i class="fa-solid fa-plug"></i> Connect Pen Drive
+            </button>
+        </div>
+    </div>
+
+    <div id="main-app" class="screen">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-brands fa-usb"></i> MediaHub</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-tab="songs"><i class="fa-solid fa-music"></i> Songs</button>
+                <button class="nav-btn" data-tab="videos"><i class="fa-solid fa-video"></i> Videos</button>
+                <button class="nav-btn" data-tab="pdfs"><i class="fa-solid fa-file-pdf"></i> PDFs</button>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="disconnect-btn" class="btn danger-btn"><i class="fa-solid fa-eject"></i> Disconnect</button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <header class="top-bar">
+                <h2 id="current-tab-title">Songs</h2>
+                <div class="search-bar">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search files...">
+                </div>
+            </header>
+            
+            <div id="tab-songs" class="tab-content active">
+                <div class="file-grid" id="songs-grid">
+                    <!-- Song items will be injected here -->
+                </div>
+            </div>
+            
+            <div id="tab-videos" class="tab-content">
+                <div class="file-grid" id="videos-grid">
+                    <!-- Video items will be injected here -->
+                </div>
+            </div>
+            
+            <div id="tab-pdfs" class="tab-content">
+                <div class="file-grid" id="pdfs-grid">
+                    <!-- PDF items will be injected here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Media Player Overlay for Video/PDF -->
+    <div id="media-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div id="modal-body">
+                <!-- Video or PDF iframe injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Persistent Audio Player -->
+    <div id="audio-player-container" class="hidden">
+        <div class="now-playing">
+            <i class="fa-solid fa-music" id="audio-icon"></i>
+            <span id="audio-title">No track selected</span>
+        </div>
+        <div class="audio-controls">
+            <button id="prev-song" class="player-btn"><i class="fa-solid fa-backward-step"></i></button>
+            <audio id="audio-player" controls controlsList="nodownload"></audio>
+            <button id="next-song" class="player-btn"><i class="fa-solid fa-forward-step"></i></button>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
+
