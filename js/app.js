@@ -171,37 +171,111 @@ document.addEventListener('DOMContentLoaded', () => {
         await readDir(dirHandle);
     }
 
+    const popularSingers = [
+        "Arijit Singh", "Sid Sriram", "Anirudh", "Shreya Ghoshal", 
+        "A.R. Rahman", "AR Rahman", "S.P. Balasubrahmanyam", "SPB", 
+        "Armaan Malik", "DSP", "Devi Sri Prasad", "Thaman", 
+        "Sanjith Hegde", "Sonu Nigam", "K.S. Chithra", "Hariharan",
+        "Karthik", "Udit Narayan", "Alka Yagnik", "Lata Mangeshkar",
+        "Kishore Kumar", "Justin Bieber", "Ed Sheeran", "Taylor Swift",
+        "The Weeknd", "Dua Lipa", "Arjit Singh", "Harris Jayaraj",
+        "Ilayaraja", "Yuvan Shankar Raja", "G.V. Prakash", "Vijay Prakash"
+    ];
+
+    function getSinger(fileName) {
+        const nameLower = fileName.toLowerCase();
+        for (const singer of popularSingers) {
+            if (nameLower.includes(singer.toLowerCase())) {
+                return singer;
+            }
+        }
+        if (fileName.includes('-')) {
+            const parts = fileName.split('-');
+            const possibleSinger = parts[0].trim();
+            if (possibleSinger && possibleSinger.length < 30) {
+                return possibleSinger;
+            }
+        }
+        return "Other Singers";
+    }
+
     function renderFiles() {
         songsGrid.innerHTML = '';
         videosGrid.innerHTML = '';
         pdfsGrid.innerHTML = '';
         
         songsOnly = allFiles.filter(f => f.type === 'song');
+        const videosOnly = allFiles.filter(f => f.type === 'video');
+        const pdfsOnly = allFiles.filter(f => f.type === 'pdf');
 
-        allFiles.forEach(file => {
-            const el = document.createElement('div');
-            el.className = `file-item ${file.type}`;
+        // Group songs by singer
+        const songsBySinger = {};
+        songsOnly.forEach(file => {
+            const singer = getSinger(file.name);
+            if (!songsBySinger[singer]) songsBySinger[singer] = [];
+            songsBySinger[singer].push(file);
+        });
+
+        // Sort singers (Others at the end, rest alphabetical)
+        const sortedSingers = Object.keys(songsBySinger).sort((a, b) => {
+            if (a === "Other Singers") return 1;
+            if (b === "Other Singers") return -1;
+            return a.localeCompare(b);
+        });
+
+        // Render grouped songs
+        for (const singer of sortedSingers) {
+            const files = songsBySinger[singer];
             
-            let iconClass = 'fa-file';
-            if (file.type === 'song') iconClass = 'fa-music';
-            if (file.type === 'video') iconClass = 'fa-video';
-            if (file.type === 'pdf') iconClass = 'fa-file-pdf';
+            const header = document.createElement('h3');
+            header.style.gridColumn = '1 / -1';
+            header.style.color = 'var(--accent-primary)';
+            header.style.margin = '20px 0 10px 0';
+            header.style.borderBottom = '1px solid var(--glass-border)';
+            header.style.paddingBottom = '10px';
+            header.style.textAlign = 'left';
+            header.innerHTML = `<i class="fa-solid fa-microphone-lines"></i> ${singer}`;
+            songsGrid.appendChild(header);
 
+            files.forEach(file => {
+                const el = document.createElement('div');
+                el.className = `file-item song`;
+                el.innerHTML = `
+                    <div class="file-icon"><i class="fa-solid fa-music"></i></div>
+                    <div class="file-name" title="${file.name}">${file.name}</div>
+                `;
+                el.addEventListener('click', () => openFile(file));
+                songsGrid.appendChild(el);
+            });
+        }
+
+        // Render videos
+        videosOnly.forEach(file => {
+            const el = document.createElement('div');
+            el.className = `file-item video`;
             el.innerHTML = `
-                <div class="file-icon"><i class="fa-solid ${iconClass}"></i></div>
+                <div class="file-icon"><i class="fa-solid fa-video"></i></div>
                 <div class="file-name" title="${file.name}">${file.name}</div>
             `;
-
             el.addEventListener('click', () => openFile(file));
+            videosGrid.appendChild(el);
+        });
 
-            if (file.type === 'song') songsGrid.appendChild(el);
-            else if (file.type === 'video') videosGrid.appendChild(el);
-            else if (file.type === 'pdf') pdfsGrid.appendChild(el);
+        // Render PDFs
+        pdfsOnly.forEach(file => {
+            const el = document.createElement('div');
+            el.className = `file-item pdf`;
+            el.innerHTML = `
+                <div class="file-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                <div class="file-name" title="${file.name}">${file.name}</div>
+            `;
+            el.addEventListener('click', () => openFile(file));
+            pdfsGrid.appendChild(el);
         });
         
-        if(songsGrid.innerHTML === '') songsGrid.innerHTML = '<p style="color:var(--text-secondary); grid-column: 1 / -1; text-align: center;">No songs found</p>';
-        if(videosGrid.innerHTML === '') videosGrid.innerHTML = '<p style="color:var(--text-secondary); grid-column: 1 / -1; text-align: center;">No videos found</p>';
-        if(pdfsGrid.innerHTML === '') pdfsGrid.innerHTML = '<p style="color:var(--text-secondary); grid-column: 1 / -1; text-align: center;">No PDFs found</p>';
+        if(songsOnly.length === 0) songsGrid.innerHTML = '<p style="color:var(--text-secondary); grid-column: 1 / -1; text-align: center;">No songs found</p>';
+        if(videosOnly.length === 0) videosGrid.innerHTML = '<p style="color:var(--text-secondary); grid-column: 1 / -1; text-align: center;">No videos found</p>';
+        if(pdfsOnly.length === 0) pdfsGrid.innerHTML = '<p style="color:var(--text-secondary); grid-column: 1 / -1; text-align: center;">No PDFs found</p>';
     }
 
     async function openFile(fileInfo) {
