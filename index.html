@@ -3,64 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendrive Media Hub</title>
+    <title>Pendrive Media Hub - Pro Audio & Media Experience</title>
+    <meta name="description" content="Secure, high-performance web-based media hub for playing songs, watching videos, and viewing PDFs directly from your USB drive with Bluetooth controls and smart sorting.">
+    <!-- Google Fonts for state-of-the-art typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
-    <!-- FontAwesome for icons -->
+    <!-- Local FontAwesome for icons -->
     <link rel="stylesheet" href="css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
 </head>
 <body>
+    <!-- Welcome Screen -->
     <div id="welcome-screen" class="screen active">
         <div class="welcome-container">
-            <div class="logo">
-                <i class="fa-brands fa-usb"></i>
+            <div class="logo-wrapper">
+                <div class="logo-glow"></div>
+                <div class="logo">
+                    <i class="fa-brands fa-usb"></i>
+                </div>
             </div>
-            <h1>Pendrive Media Hub</h1>
-            <p>Securely play your media and view PDFs without copying or altering data.</p>
-            <button id="connect-btn" class="btn primary-btn">
-                <i class="fa-solid fa-plug"></i> Connect Pen Drive
-            </button>
+            <h1>Pendrive Media Hub <span class="pro-tag">PRO</span></h1>
+            <p>Direct USB Drive playback for Songs, Videos & PDFs. 100% Client-Side & Secure with Bluetooth Remote Controls.</p>
+            
+            <div class="welcome-actions">
+                <button id="connect-btn" class="btn primary-btn" title="Open folder using File System Access API">
+                    <i class="fa-solid fa-plug"></i> Connect Pen Drive
+                </button>
+                <label for="folder-fallback-input" class="btn secondary-btn" title="Compatible with all browsers & mobile devices">
+                    <i class="fa-solid fa-folder-open"></i> Browse Folder
+                    <input type="file" id="folder-fallback-input" webkitdirectory directory multiple class="hidden-file-input">
+                </label>
+                <button id="demo-btn" class="btn ghost-btn" title="Try instantly with realistic sample library">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Try Demo Media
+                </button>
+            </div>
+
+            <div class="welcome-features">
+                <div class="feat-badge"><i class="fa-brands fa-bluetooth-b"></i> Bluetooth Speaker Remote</div>
+                <div class="feat-badge"><i class="fa-solid fa-arrow-down-a-z"></i> Smart Movie & Hero Sort</div>
+                <div class="feat-badge"><i class="fa-solid fa-shield-halved"></i> 100% Read-Only Safety</div>
+            </div>
         </div>
     </div>
 
+    <!-- Main Application Interface -->
     <div id="main-app" class="screen">
+        <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h2><i class="fa-brands fa-usb"></i> MediaHub</h2>
+                <div class="brand">
+                    <i class="fa-brands fa-usb brand-icon"></i>
+                    <div>
+                        <h2>MediaHub</h2>
+                        <span class="brand-sub">USB Drive Player</span>
+                    </div>
+                </div>
             </div>
+
             <nav class="sidebar-nav">
-                <button class="nav-btn active" data-tab="songs"><i class="fa-solid fa-music"></i> Songs</button>
-                <button class="nav-btn" data-tab="videos"><i class="fa-solid fa-video"></i> Videos</button>
-                <button class="nav-btn" data-tab="pdfs"><i class="fa-solid fa-file-pdf"></i> PDFs</button>
+                <button class="nav-btn active" data-tab="songs">
+                    <i class="fa-solid fa-music"></i>
+                    <span>Songs</span>
+                    <span class="count-pill" id="songs-count-badge">0</span>
+                </button>
+                <button class="nav-btn" data-tab="videos">
+                    <i class="fa-solid fa-video"></i>
+                    <span>Videos</span>
+                    <span class="count-pill" id="videos-count-badge">0</span>
+                </button>
+                <button class="nav-btn" data-tab="pdfs">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span>PDFs</span>
+                    <span class="count-pill" id="pdfs-count-badge">0</span>
+                </button>
             </nav>
+
+            <!-- Bluetooth Indicator in Sidebar -->
+            <div class="sidebar-bt-card" id="bt-status-card" title="Bluetooth AVRCP Media Session Status">
+                <div class="bt-card-header">
+                    <i class="fa-brands fa-bluetooth-b bt-icon"></i>
+                    <span class="bt-title">Bluetooth Remote</span>
+                </div>
+                <p class="bt-desc" id="bt-status-desc">Hardware controls ready on speaker/headphones</p>
+                <div class="bt-pulse-indicator active">
+                    <span class="pulse-dot"></span>
+                    <span id="bt-status-text">AVRCP Active</span>
+                </div>
+            </div>
+
             <div class="sidebar-footer">
-                <button id="disconnect-btn" class="btn danger-btn"><i class="fa-solid fa-eject"></i> Disconnect</button>
+                <button id="disconnect-btn" class="btn danger-btn">
+                    <i class="fa-solid fa-eject"></i> Eject & Disconnect
+                </button>
             </div>
         </aside>
 
+        <!-- Main Content Area -->
         <main class="content-area">
+            <!-- Top Action Bar -->
             <header class="top-bar">
-                <h2 id="current-tab-title">Songs</h2>
-                <div class="search-bar">
-                    <i class="fa-solid fa-search"></i>
-                    <input type="text" id="search-input" placeholder="Search files...">
+                <div class="top-left">
+                    <h2 id="current-tab-title">Songs</h2>
+                    <span class="section-meta" id="current-tab-subtitle">All audio tracks</span>
+                </div>
+
+                <!-- Instant Universal Search -->
+                <div class="search-bar-container">
+                    <div class="search-bar">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search songs, movies, heroes, singers..." autocomplete="off">
+                        <button id="clear-search-btn" class="clear-search-btn hidden" title="Clear search">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <span id="search-results-count" class="search-results-badge hidden">0 found</span>
+                </div>
+
+                <!-- Sort, Group, and View Controls (Only visible for Songs tab) -->
+                <div class="controls-toolbar" id="songs-toolbar">
+                    <!-- Sort By Selector -->
+                    <div class="control-group">
+                        <label for="sort-select"><i class="fa-solid fa-arrow-down-short-wide"></i> Sort</label>
+                        <select id="sort-select" class="custom-select">
+                            <option value="title-asc">Song Name (A to Z)</option>
+                            <option value="title-desc">Song Name (Z to A)</option>
+                            <option value="movie-asc">Movie Name (A to Z)</option>
+                            <option value="hero-asc">Hero / Actor (A to Z)</option>
+                            <option value="singer-asc">Singer Name (A to Z)</option>
+                            <option value="default">Original USB Order</option>
+                        </select>
+                    </div>
+
+                    <!-- Group By Selector -->
+                    <div class="control-group">
+                        <label for="group-select"><i class="fa-solid fa-layer-group"></i> Group</label>
+                        <select id="group-select" class="custom-select">
+                            <option value="none">No Grouping (Flat)</option>
+                            <option value="movie">Group by Movie</option>
+                            <option value="hero">Group by Hero</option>
+                            <option value="singer">Group by Singer</option>
+                            <option value="folder">Group by Folder</option>
+                        </select>
+                    </div>
+
+                    <!-- View Mode Toggle -->
+                    <div class="view-mode-toggle">
+                        <button id="view-grid-btn" class="view-btn active" title="Grid Cards View">
+                            <i class="fa-solid fa-table-cells"></i>
+                        </button>
+                        <button id="view-list-btn" class="view-btn" title="Detailed List View">
+                            <i class="fa-solid fa-list"></i>
+                        </button>
+                    </div>
                 </div>
             </header>
-            
+
+            <!-- Quick Filter Chips Bar -->
+            <div class="filter-chips-bar" id="filter-chips-bar">
+                <span class="filter-label"><i class="fa-solid fa-filter"></i> Quick Filter:</span>
+                <button class="chip-btn active" data-filter="all">All Songs</button>
+                <button class="chip-btn" data-filter="movie">By Movies</button>
+                <button class="chip-btn" data-filter="hero">By Heroes</button>
+                <button class="chip-btn" data-filter="singer">By Singers</button>
+            </div>
+
+            <!-- Tab Content: Songs -->
             <div id="tab-songs" class="tab-content active">
-                <div class="file-grid" id="songs-grid">
-                    <!-- Song items will be injected here -->
+                <div id="songs-container" class="songs-view-grid">
+                    <!-- Dynamic song items / groups injected here -->
                 </div>
             </div>
-            
+
+            <!-- Tab Content: Videos -->
             <div id="tab-videos" class="tab-content">
                 <div class="file-grid" id="videos-grid">
-                    <!-- Video items will be injected here -->
+                    <!-- Video items injected here -->
                 </div>
             </div>
-            
+
+            <!-- Tab Content: PDFs -->
             <div id="tab-pdfs" class="tab-content">
                 <div class="file-grid" id="pdfs-grid">
-                    <!-- PDF items will be injected here -->
+                    <!-- PDF items injected here -->
                 </div>
             </div>
         </main>
@@ -69,27 +195,130 @@
     <!-- Media Player Overlay for Video/PDF -->
     <div id="media-modal" class="modal">
         <div class="modal-content">
-            <span class="close-btn">&times;</span>
+            <div class="modal-header">
+                <span id="modal-title" class="modal-title">Media Viewer</span>
+                <button class="close-btn" title="Close Viewer">&times;</button>
+            </div>
             <div id="modal-body">
                 <!-- Video or PDF iframe injected here -->
             </div>
         </div>
     </div>
 
-    <!-- Persistent Audio Player -->
-    <div id="audio-player-container" class="hidden">
-        <div class="now-playing">
-            <i class="fa-solid fa-music" id="audio-icon"></i>
-            <span id="audio-title">No track selected</span>
+    <!-- Now Playing Queue Drawer -->
+    <div id="queue-drawer" class="queue-drawer">
+        <div class="queue-header">
+            <div class="queue-title-wrapper">
+                <i class="fa-solid fa-list-ol"></i>
+                <h3>Play Queue</h3>
+            </div>
+            <button id="close-queue-btn" class="close-queue-btn" title="Close Queue">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
-        <div class="audio-controls">
-            <button id="prev-song" class="player-btn"><i class="fa-solid fa-backward-step"></i></button>
-            <audio id="audio-player" controls controlsList="nodownload"></audio>
-            <button id="next-song" class="player-btn"><i class="fa-solid fa-forward-step"></i></button>
+        <div class="queue-meta">
+            <span id="queue-total-tracks">0 tracks</span>
+            <button id="clear-queue-btn" class="ghost-link">Reset Queue</button>
+        </div>
+        <div class="queue-list" id="queue-list">
+            <!-- Queue items injected here -->
         </div>
     </div>
+    <div id="queue-backdrop" class="queue-backdrop"></div>
 
+    <!-- Persistent Pro Audio Player Dock -->
+    <div id="audio-player-container" class="player-dock hidden">
+        <!-- Left: Track Cover & Details -->
+        <div class="player-track-info">
+            <div class="track-art-wrapper">
+                <img id="player-track-art" src="" alt="Album Art" class="track-art hidden">
+                <div id="player-default-art" class="track-art-placeholder">
+                    <i class="fa-solid fa-music"></i>
+                </div>
+                <div class="vinyl-disc-indicator" id="vinyl-disc"></div>
+            </div>
+            <div class="track-meta">
+                <div class="track-title-wrapper">
+                    <span id="audio-title" class="track-title">No track selected</span>
+                </div>
+                <div class="track-badges">
+                    <span id="audio-movie" class="badge-movie"><i class="fa-solid fa-film"></i> Movie</span>
+                    <span id="audio-artist" class="badge-artist"><i class="fa-solid fa-microphone"></i> Singer</span>
+                    <span id="audio-hero" class="badge-hero hidden"><i class="fa-solid fa-star"></i> Hero</span>
+                </div>
+            </div>
+            <button id="player-fav-btn" class="action-icon-btn" title="Add to Favorites">
+                <i class="fa-regular fa-heart"></i>
+            </button>
+        </div>
+
+        <!-- Center: Playback & Seek Controls -->
+        <div class="player-center">
+            <div class="player-buttons">
+                <button id="shuffle-btn" class="ctrl-btn" title="Toggle Shuffle">
+                    <i class="fa-solid fa-shuffle"></i>
+                </button>
+                <button id="prev-song" class="ctrl-btn" title="Previous Song (Bluetooth AVRCP / [P])">
+                    <i class="fa-solid fa-backward-step"></i>
+                </button>
+                <button id="play-pause-btn" class="ctrl-btn play-main-btn" title="Play / Pause (Bluetooth AVRCP / Space)">
+                    <i class="fa-solid fa-play" id="play-pause-icon"></i>
+                </button>
+                <button id="next-song" class="ctrl-btn" title="Next Song (Bluetooth AVRCP / [N])">
+                    <i class="fa-solid fa-forward-step"></i>
+                </button>
+                <button id="repeat-btn" class="ctrl-btn" title="Toggle Repeat Mode">
+                    <i class="fa-solid fa-repeat"></i>
+                    <span id="repeat-mode-badge" class="repeat-badge">OFF</span>
+                </button>
+            </div>
+
+            <!-- Custom Interactive Seek Bar -->
+            <div class="player-progress-row">
+                <span id="current-time" class="time-label">0:00</span>
+                <div class="seek-bar-wrapper" id="seek-bar-wrapper">
+                    <div class="seek-bar-bg"></div>
+                    <div class="seek-buffer-bar" id="seek-buffer-bar"></div>
+                    <div class="seek-progress-bar" id="seek-progress-bar"></div>
+                    <input type="range" id="seek-slider" min="0" max="100" value="0" step="0.1" class="seek-range-input" title="Seek Audio">
+                </div>
+                <span id="total-duration" class="time-label">0:00</span>
+            </div>
+        </div>
+
+        <!-- Right: Audio Options & Extra Controls -->
+        <div class="player-right">
+            <!-- 2s Gap Transition Badge -->
+            <div class="gap-transition-indicator" id="gap-transition-badge" title="Smooth 2-second transition between songs">
+                <i class="fa-solid fa-bolt"></i> 2s Auto
+            </div>
+
+            <!-- Volume Control -->
+            <div class="volume-control-wrapper">
+                <button id="volume-btn" class="action-icon-btn" title="Mute / Unmute">
+                    <i class="fa-solid fa-volume-high" id="volume-icon"></i>
+                </button>
+                <div class="volume-slider-box">
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1" class="volume-range-input" title="Volume">
+                </div>
+            </div>
+
+            <!-- Queue Drawer Toggle -->
+            <button id="queue-toggle-btn" class="action-icon-btn" title="Show Playback Queue">
+                <i class="fa-solid fa-list-ul"></i>
+                <span id="queue-badge-count" class="queue-badge">0</span>
+            </button>
+        </div>
+
+        <!-- Hidden Native Audio Element (Fully synchronized with Media Session API) -->
+        <audio id="audio-player" preload="metadata"></audio>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts: Metadata Engine must be loaded before main App -->
+    <script src="js/metadata.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
-

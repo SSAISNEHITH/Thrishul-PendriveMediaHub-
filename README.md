@@ -1,50 +1,76 @@
-# Pendrive Media Hub 🚀
+# Pendrive Media Hub PRO 🚀
 
-A modern, serverless, and 100% secure web application that allows you to connect your USB Pen Drive and instantly play songs, watch videos, and read PDFs directly in your browser. 
+A modern, serverless, and 100% secure web application that connects directly to your USB Pen Drive, letting you play songs, watch videos, and read PDFs with ultra-premium sound, full Bluetooth hardware remote controls, and smart metadata sorting.
 
-Built with the modern **File System Access API**, this app operates entirely on the client side with strict **read-only** permissions. This guarantees that your original files are never altered, moved, or deleted.
+Built with the **File System Access API** and the **W3C Media Session API**, this app operates entirely client-side with strict **read-only** permissions. Your files are never uploaded, copied, or modified.
 
-## ✨ Features
+---
 
-- **100% Secure & Read-Only**: Accesses your files safely without copying them or risking data manipulation.
-- **Serverless Architecture**: Runs entirely in the browser. No backend, no databases, no installations required.
-- **Premium User Interface**: A sleek, modern dark mode design featuring glassmorphism and gold/cyan accents.
-- **Smart Audio Player**: Includes a persistent audio player with Next/Previous controls and a 2-second auto-play transition between tracks.
-- **Auto-Categorization**: Automatically scans your selected directory and sorts files into Songs, Videos, and PDFs.
-- **Search Functionality**: Quickly filter through your files by name.
+## ✨ Pro Features
+
+- **📶 Bluetooth Hardware Remote (AVRCP)**: Full playback control directly from connected Bluetooth speakers, Bluetooth headphones, smartwatches, and car stereo systems (Play, Pause, Next Track, Previous Track, Seek, and Volume).
+- **🎨 Bluetooth Album Artwork & Metadata**: Transmits live track title, movie/album name, hero/actor, and singer to Bluetooth speaker displays and lock screens with auto-generated HD dynamic canvas cover art.
+- **🔍 Instant Universal Search & Click-to-Play**: Search in real time by Song Title, Movie/Album Name, Hero/Actor, Singer, or Folder. Clicking any search result immediately plays the track and synchronizes the playback queue.
+- **🔀 Multi-Criteria Sorting**:
+  - 🎵 Song Title (A to Z / Z to A)
+  - 🎬 Movie / Album Name (A to Z)
+  - 🌟 Hero / Actor Name (A to Z)
+  - 🎤 Singer / Music Director Name (A to Z)
+  - 📁 Original USB Pen Drive Folder Order
+- **📂 Smart Grouping Views**:
+  - Group by Movie (with movie reel badges & 1-click "Play Group")
+  - Group by Hero / Actor (Tollywood, Bollywood, Kollywood, Sandalwood & International stars)
+  - Group by Singer & Music Director
+  - Group by Pen Drive Directory Folder
+- **📑 Grid & List View Modes**: Toggle between visual album cards with vinyl animations and detailed Spotify-style tabular list view.
+- **🎧 Pro Audio Player Dock**:
+  - Interactive custom seek bar with buffered stream visualization
+  - Smooth 2-second auto-play transition gap between songs
+  - Shuffle mode and 3-state Repeat mode (Off / Repeat All / Repeat Track)
+  - Volume control with mute toggle
+  - Slide-out Play Queue drawer
+- **⚡ Offline & Serverless**: Zero backend dependencies, no databases, works completely offline.
+- **🛡️ 100% Safe & Read-Only**: Files remain untouched on your USB drive.
+- **🧪 Demo Mode & Cross-Browser Fallback**: Includes a built-in synthesized demo media library for instant testing, plus a universal folder picker compatible with all browsers and mobile devices.
+
+---
+
+## ⌨️ Keyboard Shortcuts
+
+| Shortcut | Action |
+| :--- | :--- |
+| **`Space`** or **`K`** | Play / Pause toggle |
+| **`N`** | Next track (in active queue) |
+| **`P`** | Previous track |
+| **`→`** / **`←`** | Seek forward / backward by 5 seconds |
+| **`M`** | Mute / Unmute audio |
+| **`/`** | Focus search input |
+| **`Esc`** | Exit search input / close drawer |
+
+---
 
 ## 🛠️ Technologies Used
 
-- **HTML5**: Application structure and media elements (`<audio>`, `<video>`, `<iframe>`).
-- **CSS3**: Custom properties (variables), Flexbox/Grid layouts, and glassmorphism styling.
-- **JavaScript (ES6+)**: Core logic, DOM manipulation, and asynchronous operations.
-- **File System Access API**: `window.showDirectoryPicker()` to securely request and read local directories.
-- **FontAwesome**: For beautiful, scalable UI icons.
+- **HTML5 & Vanilla JavaScript (ES6+)**: Modular client-side architecture with zero external runtime dependencies.
+- **CSS3 (Custom Design System)**: Glassmorphism, CSS grid, glowing neon accents, and responsive micro-animations.
+- **Media Session API**: W3C standard for Bluetooth speaker buttons, car consoles, smartwatches, and Windows/Android media flyouts.
+- **File System Access API**: Secure `window.showDirectoryPicker({ mode: 'read' })` with fallback for `<input webkitdirectory>`.
+- **Pure JS Binary ID3 Parser**: Directly reads ID3v2/ID3v1 tags and embedded album art from the file slice without excessive memory consumption.
+- **Canvas 2D API**: High-resolution 512x512 dynamic artwork generation for Bluetooth device display.
+
+---
 
 ## 🚀 How to Run
 
-Because this application relies on the File System Access API, it **must** be run on a modern Chromium-based browser (such as Google Chrome, Microsoft Edge, or Brave).
+1. Open `index.html` directly in Google Chrome, Microsoft Edge, Brave, or any modern Chromium browser.
+2. Click **Connect Pen Drive** and select your USB drive root folder.
+3. Grant "View files" permission when prompted.
+4. Pair your Bluetooth speaker or headphones and enjoy total remote-controlled playback!
 
-1. Clone this repository or download the source code.
-2. Open the `index.html` file in your browser.
-3. Click the **Connect Pen Drive** button.
-4. Select the root folder of your connected USB drive when prompted.
-5. Grant the browser permission to "View files".
-6. Enjoy your media!
+*(Optional: Click **"Try Demo Media"** to immediately test all search, sort, and Bluetooth features without connecting a physical drive.)*
 
-## 🧠 How It Works
-
-The core of this application relies on the browser's ability to safely request local file handles:
-1. We invoke `window.showDirectoryPicker({ mode: 'read' })` to ask the user for a folder.
-2. We recursively iterate through the directory, filtering for supported extensions (`.mp3`, `.wav`, `.mp4`, `.pdf`, etc.).
-3. We utilize `URL.createObjectURL(file)` to generate a safe, temporary reference that the browser can use as a source for audio, video, or iframe elements. 
-4. Memory is managed carefully by revoking object URLs when they are no longer needed.
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](../../issues).
+---
 
 ## 📝 License
 
 This project is licensed under the MIT License.
-
